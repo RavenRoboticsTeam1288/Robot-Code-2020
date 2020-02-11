@@ -5,8 +5,7 @@ import utilities
 class ShooterController():
     def __init__(self, robot):
         #Motor Setup
-        '''self.Ultrasonic = wpilib.Ultrasonic(7, 8)
-        self.RakeMotor = wpilib.Victor(6)
+        '''self.RakeMotor = wpilib.Victor(6)
         self.PivotMotor = wpilib.Victor(5)
         self.ConveyorMotor1 = ctre.WPI_VictorSPX(4)
         self.ConveyorMotor2 = ctre.WPI_VictorSPX(3)
@@ -15,12 +14,13 @@ class ShooterController():
         self.ConveyorMotor1 = wpilib.Victor(4) #not the real port
         self.ConveyorMotor2 = wpilib.Victor(3) #not the real port
         self.Flywheel = wpilib.Victor(2) #not the real port
-        self.TimedMotor = wpilib.Victor(1) #not the real port
+        #self.TimedMotor = wpilib.Victor(1) #not the real port
         self.RakeMotor = wpilib.Victor(5) #not the real port
 
         #Timer Setup
         self.ShootTimer = wpilib.Timer()
         self.PrintTimer = wpilib.Timer()
+        self.PrintTimer.start()
         self.RakeTimer = wpilib.Timer()
         self.IndexTimer = wpilib.Timer()
 

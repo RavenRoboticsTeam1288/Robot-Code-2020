@@ -142,19 +142,26 @@ class utilities():
 
 
     def BallIndex(robot):
-        robot.ConveyorMotor1.set(.1)
-        robot.ConveyorMotor2.set(.1)
-        if robot.Conveyor1Encoder.get() >= robot.ConveyorIndex and robot.Conveyor2Encoder.get() >= robot.ConveyorIndex:
-            robot.ConveyorMotor1.set(0)
-            robot.ConveyorMotor2.set(0)
-            robot.IndexTimer.stop()
-            robot.IndexTimer.reset()
-            robot.IndexRunning = False
-            print("Ball Indexed")
+        if Shooter.IndexSensor3:
+            pass
+        else:
+            robot.ConveyorMotor1.set(.1)
+            robot.ConveyorMotor2.set(.1)
+            if Shooter.IndexSensor2:
+                if Shooter.IndexTimer > .25:
+                    pass
+                else:
+                    if Shooter.IndexSensor2:
+                        robot.ConveyorMotor1.set(0)
+                        robot.ConveyorMotor2.set(0)
+                        robot.IndexTimer.stop()
+                        robot.IndexTimer.reset()
+                        robot.IndexRunning = False
+                        print("Ball Indexed")
 
-        if robot.PrintTimer.hasPeriodPassed(1):
-            print(int(robot.IndexTimer.get()))
-            
+                    if robot.PrintTimer.hasPeriodPassed(1):
+                        print(int(robot.IndexTimer.get()))
+
     #Auto Functions
     def DriveNumSecs(robot, direction, speed1, num):
         if robot.AutoTimer.get() < 3:

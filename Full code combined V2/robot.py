@@ -4,7 +4,7 @@ from networktables import NetworkTables
 from wpilib import SmartDashboard
 from drivetrain import DrivetrainController
 from wpilib import Encoder
-from autoStates import autoStates
+from autoStates import AutoStates
 from utilities import utilities
 from wpilib import interfaces
 #from climber import ClimberController

@@ -30,7 +30,9 @@ class ShooterController():
         self.FlywheelEncoder = wpilib.Encoder(10, 11, False, wpilib.Encoder.EncodingType.k1X)
 
         #Misc Setup:
-        self.IndexSensor = wpilib.DigitalInput(5) #not the real port
+        self.IndexSensor1 = wpilib.DigitalInput(5) #not the real port
+        self.IndexSensor2 = wpilib.DigitalInput(6) #not the real port
+        self.IndexSensor3 = wpilib.DigitalInput(7) #not the real port
         self.BumpSwitch = wpilib.DigitalInput(1) #not the real port
         self.RakeRelease1 = wpilib.PWM(0) #not the real port
         self.RakeRelease2 = wpilib.PWM(3) #not the real port
@@ -105,8 +107,8 @@ class ShooterController():
             utilities.utilities.AutoShootLow(self)
 
         #Ball Index System
-        #if self.IndexSensor.get():
-        if robot.gamepad.getRawButton(1): #Replace with above sensor
+        #if robot.gamepad.getRawButton(1):
+        if self.IndexSensor1.get() and not self.IndexController3:
             self.IndexTimer.start()
             self.IndexRunning = True
 

@@ -5,12 +5,12 @@ import ctre
 class ShooterController():
     def __init__(self, robot):
         #Motor Setup
-        self.RakeMotor = wpilib.Victor(6)
-        self.PivotMotor = wpilib.Victor(5)
-        self.ConveyorMotor1 = ctre.WPI_VictorSPX(4)
-        self.ConveyorMotor2 = ctre.WPI_VictorSPX(3)
-        self.Flywheel = ctre.WPI_VictorSPX(2)
-        self.TimedMotor = ctre.WPI_VictorSPX(1)
+        self.RakeMotor = ctre.WPI_TalonSRX(6)
+        self.PivotMotor = ctre.WPI_TalonSRX(5)
+        self.ConveyorMotor1 = ctre.WPI_TalonSRX(4)
+        self.ConveyorMotor2 = ctre.WPI_TalonSRX(3)
+        self.Flywheel = ctre.WPI_TalonSRX(2)
+        self.TimedMotor = ctre.WPI_TalonSRX(1)
         '''self.ConveyorMotor1 = wpilib.Victor(4) #not the real port
         self.ConveyorMotor2 = wpilib.Victor(3) #not the real port
         self.Flywheel = wpilib.Victor(2) #not the real port
@@ -32,8 +32,8 @@ class ShooterController():
         #Misc Setup:
         self.IndexSensor = wpilib.DigitalInput(5) #not the real port
         self.BumpSwitch = wpilib.DigitalInput(1) #not the real port
-        self.RakeRelease1 = wpilib.DigitalOutput(0) #not the real port
-        self.RakeRelease2 = wpilib.DigitalOutput(3) #not the real port
+        self.RakeRelease1 = wpilib.PWM(0) #not the real port
+        self.RakeRelease2 = wpilib.PWM(3) #not the real port
         self.RakeDropping = True
         self.AutoShoot = False
         self.AutoShootLow = False
@@ -45,20 +45,22 @@ class ShooterController():
 
     #---------------------------------------------------------------------------
     def autonomousInit(self, robot):
-        self.RakeRelease1.set(True)
-        self.RakeRelease2.set(True)
+        self.RakeRelease1.setPosition(1)
+        self.RakeRelease2.setPosition(1)
         #self.PrintTimer.start()
 
     #---------------------------------------------------------------------------
     def autonomousPeriodic(self, robot):
-        self.RakeTimer.start()
+        pass
+        #Just in case servos need 
+        '''self.RakeTimer.start()
         if self.RakeTimer.get() > 3:
-            self.RakeRelease1.set(False)
-            self.RakeRelease2.set(False)
+            self.RakeRelease1.setPosition(0)
+            self.RakeRelease2.setPosition(0)
             self.RakeTimer.stop()
             self.RakeTimer.reset()
             self.RakeDropping = False
-            '''self.PrintTimer.stop()
+            self.PrintTimer.stop()
         if self.PrintTimer.hasPeriodPassed(1) and self.RakeDropping == True:
             print(int(self.RakeTimer.get()))'''
 

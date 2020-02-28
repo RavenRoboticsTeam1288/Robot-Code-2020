@@ -2,45 +2,50 @@
 import wpilib
 import ctre
 
-#from rev.color import ColorSensorV3
-#import ColorSensor
+from rev.color import ColorSensorV3
+import ColorSensor
 #color sensor instalation (py -3 -m pip install -U robotpy-rev-color)
 
 class ClimberController():
 
     def __init__(self):
-
+        
+        #Setup for the Motors using CTRE can bus
+        #Uses The phonix Turner Software to Assign the Motor Ids
         self.Winch = ctre.WPI_VictorSPX(1)
         self.Scissor = ctre.WPI_TalonSRX(3)
-        self.Scissor.configSelectedFeedbackSensor(ctre.FeedbackDevice.QuadEncoder,0,0)
-        self.Scissor.config_kP(0, 0.005, 0)
-        self.Scissor.config_kI(0, 0.0000001, 0)
-        self.Scissor.config_kD(0, 0.0, 0)
         self.coFlyWheel = ctre.WPI_VictorSPX(2)
         self.stickLift = ctre.WPI_VictorSPX(4)
+        
+        #Scissor lift Positional PID loop
+        #Starts by getting the the encoder that is connected to the Motor controller
+        self.Scissor.configSelectedFeedbackSensor(ctre.FeedbackDevice.QuadEncoder,0,0)
+        self.Scissor.config_kP(0, 0.005, 0) #Configuring the different parts of the loop.
+        self.Scissor.config_kI(0, 0.0000001, 0)
+        self.Scissor.config_kD(0, 0.0, 0)
+        
         '''self.Winch = wpilib.Victor(1)
         self.Scissor = ctre.WPI_TalonSRX(3)
         self.coFlyWheel = wpilib.Victor(3)
         self.stickLift = wpilib.Victor(4)'''
+        
+        #Misc variable setups
         self.scissorExtendSpeed = .6
         self.scissorRetractSpeed = -.6
         self.winchRetractSpeed = -.1
         self.CoSpeed = .1
-        self.targetB = [(0,255,255) ,(0,206,209)]
-        self.targetY = [(255,255,0) ,(184,134,11)]
-        self.targetG = [(60,179,113) ,(0,100,0)]
-        self.targetR = [(255,0,0) ,(178,34,34)]
         rotations = 0
-
-        self.Encoder = wpilib.Encoder(6, 7, False, wpilib.Encoder.EncodingType.k1X)
 
         self.timer = wpilib.Timer()
         self.Scissor.setQuadraturePosition(0)
         '''self.motor1 = ctre.WPI_VictorSPX(3)'''
         self.motor1 = wpilib.Victor(3)
-        #self.colorSensor = ColorSensorV3(wpilib.I2C.Port.kOnboard)
-        #self.colorSensor = ColorSensor.ColorSensor()
-        #self.colorSensor.setSensor(ColorSensorV3(wpilib.I2C.Port.kOnboard))
+#------------------------------------------------------------------------------------------------------------------------------#
+        
+        #Seting up the Color sensor
+        self.colorSensor = ColorSensorV3(wpilib.I2C.Port.kOnboard)
+        self.colorSensor = ColorSensor.ColorSensor()
+        self.colorSensor.setSensor(ColorSensorV3(wpilib.I2C.Port.kOnboard))
 
     def teleopPeriodic(self, robot):
         if robot.gamepad.getRawButton(5) and self.Scissor.getSelectedSensorPosition(0) < 2717000:
@@ -63,10 +68,11 @@ class ClimberController():
             self.stickLift.set(0)
 
 #Color sensor V3
-        print(self.colorSensor.getColor())
-        colorStr = self.colorSensor.getColor()
-        proximity = self.colorSensor.sensor.getProximity()
+        print(self.colorSensor.getColor()) #Prints out the color in the terminal
+        colorStr = self.colorSensor.getColor() #Assigns the color it finds to a variable to grab later on
+        proximity = self.colorSensor.sensor.getProximity() #Uses the small proximity sensor built into it
 
+        #Uploads the strings and values to shuffle board to be seen easier.
         wpilib.SmartDashboard.putNumber("proximity", proximity)
         wpilib.SmartDashboard.putString("Color", colorStr)
 

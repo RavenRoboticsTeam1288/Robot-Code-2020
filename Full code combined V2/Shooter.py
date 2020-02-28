@@ -24,10 +24,12 @@ class ShooterController():
         self.RakeTimer = wpilib.Timer()
         self.IndexTimer = wpilib.Timer()
 
-        #Encoder Setup
-        self.Conveyor1Encoder = wpilib.Encoder(6, 7, False, wpilib.Encoder.EncodingType.k1X)
-        self.Conveyor2Encoder = wpilib.Encoder(8, 9, False, wpilib.Encoder.EncodingType.k1X)
-        self.FlywheelEncoder = wpilib.Encoder(10, 11, False, wpilib.Encoder.EncodingType.k1X)
+        #Encoder Setup 
+        #Fix these
+        #self.Conveyor1Encoder = wpilib.Encoder(6, 7, False, wpilib.Encoder.EncodingType.k1X)
+        #self.Conveyor2Encoder = wpilib.Encoder(8, 9, False, wpilib.Encoder.EncodingType.k1X)
+        #self.FlywheelEncoder = wpilib.Encoder(10, 11, False, wpilib.Encoder.EncodingType.k1X)
+		self.ConveyorMotor1.get
 
         #Misc Setup:
         self.IndexSensor1 = wpilib.DigitalInput(5) #not the real port
@@ -44,6 +46,21 @@ class ShooterController():
         self.IndexRunning = False
         self.WaitTime = .5
         self.ConveyorIndex = 1536 #1.5 rotations * 1024 encoder counts, Placeholder
+        
+    #---------------------------------------------------------------------------------
+    
+        #PID loop for velocity
+        #keeps the flywheel going at a constant RPM at all times 
+        #Corrects for errors
+        self.Flywheel.configSelectedFeedbackSensor(ctre.FeedbackDevice.QuadEncoder,0,0)
+        self.Flywheel.config_kF(0, 0.01, 0)
+        self.Flywheel.config_kP(0, 0.01, 0)
+        self.Flywheel.config_kI(0, 0.00001, 0)
+        self.Flywheel.config_kD(0, 0.0, 0)
+        self.fleshWound = wpilib.Timer()
+        self.fleshWound.start()
+        self.Errorzone = 0
+        
 
     #---------------------------------------------------------------------------
     def autonomousInit(self, robot):
@@ -72,6 +89,14 @@ class ShooterController():
     #---------------------------------------------------------------------------
         
     def teleopPeriodic(self, robot):
+        
+        #keeping the fly wheel at a set speed
+        if self.fleshwound.hasPeriodPassed(.1):
+            vel = (self.Flywheel.getSelectedSensorPosition(0) - self.Errorzone) * 10
+            self.Errorzone = self.Flywheel.getSelectedSensorPosition(0)
+            self.fleshwound.reset()
+            self.fleshwound.start()
+        
         #Manual Shooting and Ball Pickup
         if robot.gamepad.getRawButton(7):
             self.Flywheel.set(.5)
@@ -114,21 +139,64 @@ class ShooterController():
 
         if self.IndexRunning:
             utilities.utilities.BallIndex(self)
+           
         
+	 def AutoShoot(robot):
+        robot.Flywheel.set(ctre.ControlMode.Velocity, 10240)
+        if robot.ShootTimer.get() < robot.WaitTime:
+            robot.ConveyorMotor1.set(.1)
+            robot.ConveyorMotor2.set(.1)
+        elif robot.ShootTimer.get() < robot.WaitTime + .5:
+            robot.ConveyorMotor1.set(0)
+            robot.ConveyorMotor2.set(0)
+        else:
+            robot.WaitTime += 1
+            
+        if robot.ShootTimer.get() > 5:
+            robot.Flywheel.set(ctre.ControlMode.Velocity, 0)
+            robot.ConveyorMotor1.set(0)
+            robot.ConveyorMotor2.set(0)
+            robot.ShootTimer.stop()
+            robot.ShootTimer.reset()
+            robot.AutoShoot = False
+            robot.WaitTime = .5
+
+        if robot.PrintTimer.hasPeriodPassed(1):
+            print(int(robot.ShootTimer.get()))
+			
+	def AutoShootLow(robot):
+        robot.Flywheel.set(ctre.ControlMode.Velocity, 5240)
+        if robot.ShootTimer.get() < robot.WaitTime:
+            robot.ConveyorMotor1.set(.1)
+            robot.ConveyorMotor2.set(.1)
+        elif robot.ShootTimer.get() < robot.WaitTime + .5:
+            robot.ConveyorMotor1.set(0)
+            robot.ConveyorMotor2.set(0)
+        else:
+            robot.WaitTime += 1
+            
+        if robot.ShootTimer.get() > 5:
+            robot.Flywheel.set(ctre.ControlMode.Velocity, 0)
+            robot.ConveyorMotor1.set(0)
+            robot.ConveyorMotor2.set(0)
+            robot.ShootTimer.stop()
+            robot.ShootTimer.reset()
+            robot.AutoShootLow = False
+            robot.WaitTime = .5
+
+        if robot.PrintTimer.hasPeriodPassed(1):
+            print(int(robot.ShootTimer.get()))
         #-----------------------------------------------------------------------
         #Test Stuff
-
+        
+        '''
         #Solenoid Activation
         if robot.gamepad.getRawButton(2):
             self.RakeRelease1.set(True)
             self.RakeRelease2.set(True)
 
         
-        #Encoder Button
-        '''if robot.stick1.getRawButton(2):
-            self.EncoderBegin = True
-        if EncoderBegin == True:
-            self.Encoder.'''
+  
 
         #Ultrasonic
         if robot.stick1.getRawButton(3):
@@ -155,3 +223,4 @@ class ShooterController():
                 self.Timer.reset()
                 self.TimerBegin = False
                 self.TimerRunning = False
+         '''

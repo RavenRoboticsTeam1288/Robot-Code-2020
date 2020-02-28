@@ -1,25 +1,28 @@
+#Library Imports
 import wpilib
 import ctre
 from networktables import NetworkTables
 from wpilib import SmartDashboard
-from drivetrain import DrivetrainController
+from ctre import TalonSRX
 from wpilib import Encoder
+from wpilib import interfaces
+
+#Subfile imports
+from drivetrain import DrivetrainController
 from autoStates import AutoStates
 from utilities import utilities
-from wpilib import interfaces
-#from climber import ClimberController
 from Ultrasonic import Ultrasonic
-from ctre import TalonSRX
+from climber_and_colorSenor import ClimberController
 
 class MyRobot(wpilib.TimedRobot):
 
     def robotInit(self):
-
+        
+        #Trying to start up all the commands for Shuffleboard upon boot
         self.sd = NetworkTables.getTable('SmartDashboard')
         #self.sd.putBoolean("IdealStart", True)
         self.sd.putNumber("bruh moment", 2.7)
         self.sd.putString("Start Position", "Panic")
-        self.Servo = wpilib.PWM(4)
         #wpilib.CameraServer.launch('camera.py:main')
 
         #Joystick/gamepad setup
@@ -31,20 +34,19 @@ class MyRobot(wpilib.TimedRobot):
         self.drivetrainController = DrivetrainController(self)
 
         #Climber Controller Setup, create the climber control object for the robot
-        #self.climberController = ClimberController()
+        self.climberController = ClimberController()
         self.Winch = ctre.WPI_VictorSPX(1)
         self.Scissor = ctre.WPI_VictorSPX(2)
         self.coFlyWheel = ctre.WPI_VictorSPX(3)
         self.stickLift = ctre.WPI_VictorSPX(4)
 
-        self.encoderLeft = wpilib.Encoder(6, 7, False, wpilib.Encoder.EncodingType.k1X) #left driv - fix to canbus
+        '''self.encoderLeft = wpilib.Encoder(6, 7, False, wpilib.Encoder.EncodingType.k1X) #left driv - fix to canbus
         self.encoderRight = wpilib.Encoder(8, 9, False, wpilib.Encoder.EncodingType.k1X) #right drive - fix to canbus
-        self.Encoder = wpilib.Encoder(6, 7, False, wpilib.Encoder.EncodingType.k1X) #climber encoder - fix to canbus
+        self.Encoder = wpilib.Encoder(6, 7, False, wpilib.Encoder.EncodingType.k1X) #climber encoder - fix to canbus'''
 
+        #Start up the other sensors that are needed that aren't using Can Bus
         self.gyro = wpilib.AnalogGyro(3)
-        self.ultrasonic = wpilib.Ultrasonic(0, 1)
-
-        #self.sd.putNumber("angle", self.gyro.getAngle())
+        self.Servo = wpilib.PWM(4)
         self.ultrasonic = wpilib.AnalogInput(2)
 
         self.autostate = 'start'
@@ -55,20 +57,15 @@ class MyRobot(wpilib.TimedRobot):
         self.TestMotor = ctre.TalonSRX(4)
         self.fleshWound = wpilib.Timer()
         self.fleshWound.start()
+        
         self.climberController = ClimberController()
+        
         self.ShooterController = ShooterController(self)
 
 
 
 
         #self.PIDLoop = wpilib.PIDLoopController(1, 0, 0, 0, self.TestEncoder, self.TestMotor, .05)
-
-        '''example = (
-            wpilib.SmartDashboard.getTab("New")
-            .add("test", False)
-            .withWidget(BuiltInWidgets.kToggleButton)
-            .getEntry()
-            )'''
 
 
     def autonomousPeriodic(self):

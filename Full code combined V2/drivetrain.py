@@ -16,6 +16,7 @@ class DrivetrainController():
     def __init__(self, robot):# This defines __init__(self, robot):
 
         #Drivetrain Motor Setup
+        #Setup for PWM Tank Drive
         '''self.frontLeft = wpilib.Victor(9)
         #self.frontLeft.setInverted(True)
         self.rearLeft = wpilib.Victor(5)
@@ -25,17 +26,16 @@ class DrivetrainController():
         self.rearRight = wpilib.Victor(8)
         self.right = wpilib.SpeedControllerGroup(self.frontRight, self.rearRight)
         robot.drive = DifferentialDrive(self.left, self.right)'''
-
+        
+        #Can bus Tank Drive
         self.frontLeft = ctre.WPI_VictorSPX(4)
         self.rearLeft = ctre.WPI_VictorSPX(3)
         self.frontRight = wpilib.Talon(0)
         self.rearRight = ctre.WPI_VictorSPX(2)
         robot.drive = MecanumDrive(self.frontLeft, self.rearLeft, self.frontRight, self.rearRight)
-
-        '''self.redLine = ctre.WPI_VictorSPX(1)
-        self.redLine1 = ctre.WPI_VictorSPX(2)'''
-
-
+    
+    #---------------------------------------------------------------------------------------------------
+    
     def teleopPeriodic(self, robot):
 
         #Joystick Axis Setup
@@ -60,15 +60,12 @@ class DrivetrainController():
             stick2_Y *= 0.5
 
         #Tank Drive Setup
-        #robot.drive.tankDrive(stick1_Y, stick2_Y)
+        robot.drive.tankDrive(stick1_Y, stick2_Y)
 
-        '''if robot.stick1.getRawButton(2):
-            self.redLine.set(0.5)
-        else:
-            self.redLine.set(0.0)'''
-
+    #--------------------------------------------------------------------    
+        
     def autonomousInit(self, robot):
-        #robot.drive.setSafetyEnabled( False )
+        robot.drive.setSafetyEnabled( False )
         pass
 
     def autonomousPeriodic(self, robot):
@@ -124,5 +121,5 @@ class DrivetrainController():
 
 
     def teleopInit(self, robot):
-        #robot.drive.setSafetyEnabled( True )
+        robot.drive.setSafetyEnabled( True )
         pass

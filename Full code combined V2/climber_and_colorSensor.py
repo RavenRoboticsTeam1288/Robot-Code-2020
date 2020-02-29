@@ -14,8 +14,8 @@ class ClimberController():
         #Uses The phonix Turner Software to Assign the Motor Ids
         self.Winch = ctre.WPI_VictorSPX(1)
         self.Scissor = ctre.WPI_TalonSRX(3)
-        self.coFlyWheel = ctre.WPI_VictorSPX(2)
-        self.stickLift = ctre.WPI_VictorSPX(4)
+        #self.coFlyWheel = ctre.WPI_VictorSPX(2)
+        #self.stickLift = ctre.WPI_VictorSPX(4)
         
         #Scissor lift Positional PID loop
         #Starts by getting the the encoder that is connected to the Motor controller

@@ -3,7 +3,7 @@ import wpilib
 import ctre
 
 from rev.color import ColorSensorV3
-import ColorSensor
+import colorSensor
 #color sensor instalation (py -3 -m pip install -U robotpy-rev-color)
 
 class ClimberController():

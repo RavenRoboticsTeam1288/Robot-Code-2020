@@ -13,6 +13,7 @@ from autoStates import AutoStates
 from utilities import utilities
 from Ultrasonic import Ultrasonic
 from climber_and_colorSensor import ClimberController
+from Shooter import ShooterController
 
 class MyRobot(wpilib.TimedRobot):
 
@@ -53,6 +54,9 @@ class MyRobot(wpilib.TimedRobot):
         self.autoComplete = False
 
         #PID Loop Testing
+
+        self.AutoTimer = wpilib.Timer()
+        self.AutoTimer.start()
 
         self.TestMotor = ctre.TalonSRX(4)
         self.fleshWound = wpilib.Timer()
@@ -129,7 +133,7 @@ class MyRobot(wpilib.TimedRobot):
             self.fleshWound.start()
 
         #Drivetrain
-        self.DrivetrainController.teleopPeriodic(self)
+        #self.DrivetrainController.teleopPeriodic(self)
 
         #Shooter
         self.ShooterController.teleopPeriodic(self)

@@ -59,7 +59,7 @@ class DrivetrainController():
             stick1_Y *= 0.5
             stick2_Y *= 0.5
 
-        robot.gamepad.getRawButton(1):
+        if robot.gamepad.getRawButton(1):
             utilities.ControlPanelDriving(robot)
             
         #Tank Drive Setup

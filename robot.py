@@ -12,7 +12,7 @@ from drivetrain import DrivetrainController
 from autoStates import AutoStates
 from utilities import utilities
 from Ultrasonic import Ultrasonic
-from climber_and_colorSenor import ClimberController
+from climber_and_colorSensor import ClimberController
 
 class MyRobot(wpilib.TimedRobot):
 

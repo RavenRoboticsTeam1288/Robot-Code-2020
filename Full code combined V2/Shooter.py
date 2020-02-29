@@ -141,51 +141,51 @@ class ShooterController():
             utilities.utilities.BallIndex(self)
            
         
-	 def AutoShoot(robot):
-        robot.Flywheel.set(ctre.ControlMode.Velocity, 10240)
-        if robot.ShootTimer.get() < robot.WaitTime:
-            robot.ConveyorMotor1.set(.1)
-            robot.ConveyorMotor2.set(.1)
-        elif robot.ShootTimer.get() < robot.WaitTime + .5:
-            robot.ConveyorMotor1.set(0)
-            robot.ConveyorMotor2.set(0)
-        else:
-            robot.WaitTime += 1
+	def AutoShoot(robot):
+       	    robot.Flywheel.set(ctre.ControlMode.Velocity, 10240)
+            if robot.ShootTimer.get() < robot.WaitTime:
+                robot.ConveyorMotor1.set(.1)
+                robot.ConveyorMotor2.set(.1)
+            elif robot.ShootTimer.get() < robot.WaitTime + .5:
+                robot.ConveyorMotor1.set(0)
+                robot.ConveyorMotor2.set(0)
+            else:
+                robot.WaitTime += 1
             
-        if robot.ShootTimer.get() > 5:
-            robot.Flywheel.set(ctre.ControlMode.Velocity, 0)
-            robot.ConveyorMotor1.set(0)
-            robot.ConveyorMotor2.set(0)
-            robot.ShootTimer.stop()
-            robot.ShootTimer.reset()
-            robot.AutoShoot = False
-            robot.WaitTime = .5
+            if robot.ShootTimer.get() > 5:
+                robot.Flywheel.set(ctre.ControlMode.Velocity, 0)
+                robot.ConveyorMotor1.set(0)
+                robot.ConveyorMotor2.set(0)
+                robot.ShootTimer.stop()
+                robot.ShootTimer.reset()
+                robot.AutoShoot = False
+                robot.WaitTime = .5
 
-        if robot.PrintTimer.hasPeriodPassed(1):
-            print(int(robot.ShootTimer.get()))
+            if robot.PrintTimer.hasPeriodPassed(1):
+                print(int(robot.ShootTimer.get()))
 			
 	def AutoShootLow(robot):
-        robot.Flywheel.set(ctre.ControlMode.Velocity, 5240)
-        if robot.ShootTimer.get() < robot.WaitTime:
-            robot.ConveyorMotor1.set(.1)
-            robot.ConveyorMotor2.set(.1)
-        elif robot.ShootTimer.get() < robot.WaitTime + .5:
-            robot.ConveyorMotor1.set(0)
-            robot.ConveyorMotor2.set(0)
-        else:
-            robot.WaitTime += 1
-            
-        if robot.ShootTimer.get() > 5:
-            robot.Flywheel.set(ctre.ControlMode.Velocity, 0)
-            robot.ConveyorMotor1.set(0)
-            robot.ConveyorMotor2.set(0)
-            robot.ShootTimer.stop()
-            robot.ShootTimer.reset()
-            robot.AutoShootLow = False
-            robot.WaitTime = .5
-
-        if robot.PrintTimer.hasPeriodPassed(1):
-            print(int(robot.ShootTimer.get()))
+            robot.Flywheel.set(ctre.ControlMode.Velocity, 5240)
+            if robot.ShootTimer.get() < robot.WaitTime:
+                robot.ConveyorMotor1.set(.1)
+                robot.ConveyorMotor2.set(.1)
+            elif robot.ShootTimer.get() < robot.WaitTime + .5:
+                robot.ConveyorMotor1.set(0)
+                robot.ConveyorMotor2.set(0)
+            else:
+                robot.WaitTime += 1
+                
+            if robot.ShootTimer.get() > 5:
+                robot.Flywheel.set(ctre.ControlMode.Velocity, 0)
+                robot.ConveyorMotor1.set(0)
+                robot.ConveyorMotor2.set(0)
+                robot.ShootTimer.stop()
+                robot.ShootTimer.reset()
+                robot.AutoShootLow = False
+                robot.WaitTime = .5
+    
+            if robot.PrintTimer.hasPeriodPassed(1):
+                print(int(robot.ShootTimer.get()))
         #-----------------------------------------------------------------------
         #Test Stuff
         

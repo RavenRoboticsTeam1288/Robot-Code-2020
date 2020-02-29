@@ -8,7 +8,7 @@ class utilities():
     def driveNumInches(robot, direction, speed1, num):
         print("Got to DNI")
         ticksNeeded = num * (100/2.67)
-        if robot.encoderLeft.get() < ticksNeeded:
+        if robot.drivetrainController.frontLeft.getSelectedSensorPosition(0) < ticksNeeded:
             #robot.left.set(speed1)
             robot.drivetrainController.frontLeft.set(speed1)
             robot.drivetrainController.rearLeft.set(speed1)
@@ -17,7 +17,7 @@ class utilities():
             robot.drivetrainController.frontLeft.set(0)
             robot.drivetrainController.rearLeft.set(0)
             robot.drivetrainController.encoderLeft.reset()
-        if robot.encoderRight.get() < ticksNeeded:
+        if robot.drivetrainController.frontRight.getSelectedSensorPosition(0) < ticksNeeded:
             #robot.right.set(speed1)
             robot.drivetrainController.frontRight.set(speed1)
             robot.drivetrainController.rearRight.set(speed1)
@@ -26,70 +26,28 @@ class utilities():
             robot.drivetrainController.frontRight.set(0)
             robot.drivetrainController.rearRight.set(0)
             robot.drivetrainController.encoderRight.reset()
-        if robot.encoderRight.get() >= ticksNeeded and encoder.Left.get() >= ticksNeeded:
+        if robot.drivetrainController.frontLeft.getSelectedSensorPosition(0) >= ticksNeeded and robot.drivetrainController.frontRight.getSelectedSensorPosition(0) >= ticksNeeded:
             return True
-    def AutoShoot(robot):
-        robot.Flywheel.set(.5)
-        if robot.ShootTimer.get() < robot.WaitTime:
-            robot.ConveyorMotor1.set(.1)
-            robot.ConveyorMotor2.set(.1)
-        elif robot.ShootTimer.get() < robot.WaitTime + .5:
-            robot.ConveyorMotor1.set(0)
-            robot.ConveyorMotor2.set(0)
-        else:
-            robot.WaitTime += 1
-            
-        if robot.ShootTimer.get() > 5:
-            robot.Flywheel.set(0)
-            robot.ConveyorMotor1.set(0)
-            robot.ConveyorMotor2.set(0)
-            robot.ShootTimer.stop()
-            robot.ShootTimer.reset()
-            robot.AutoShoot = False
-            robot.WaitTime = .5
-            return True
-
-        if robot.PrintTimer.hasPeriodPassed(1):
-            print(int(robot.ShootTimer.get()))
-
-    def AutoShootLow(robot):
-        robot.Flywheel.set(.2)
-        if robot.ShootTimer.get() < robot.WaitTime:
-            robot.ConveyorMotor1.set(.1)
-            robot.ConveyorMotor2.set(.1)
-        elif robot.ShootTimer.get() < robot.WaitTime + .5:
-            robot.ConveyorMotor1.set(0)
-            robot.ConveyorMotor2.set(0)
-        else:
-            robot.WaitTime += 1
-            
-        if robot.ShootTimer.get() > 5:
-            robot.Flywheel.set(0)
-            robot.ConveyorMotor1.set(0)
-            robot.ConveyorMotor2.set(0)
-            robot.ShootTimer.stop()
-            robot.ShootTimer.reset()
-            robot.AutoShootLow = False
-            robot.WaitTime = .5
-            return True
-
-        if robot.PrintTimer.hasPeriodPassed(1):
-            print(int(robot.ShootTimer.get()))
-
-
     def BallIndex(robot):
-        robot.ConveyorMotor1.set(.1)
-        robot.ConveyorMotor2.set(.1)
-        if robot.Conveyor1Encoder.get() >= robot.ConveyorIndex and robot.Conveyor2Encoder.get() >= robot.ConveyorIndex:
-            robot.ConveyorMotor1.set(0)
-            robot.ConveyorMotor2.set(0)
-            robot.IndexTimer.stop()
-            robot.IndexTimer.reset()
-            robot.IndexRunning = False
-            print("Ball Indexed")
+        if Shooter.IndexSensor3:
+            pass
+        else:
+            robot.ConveyorMotor1.set(.1)
+            robot.ConveyorMotor2.set(.1)
+            if Shooter.IndexSensor2:
+                if Shooter.IndexTimer > .25:
+                    pass
+                else:
+                    if Shooter.IndexSensor2:
+                        robot.ConveyorMotor1.set(0)
+                        robot.ConveyorMotor2.set(0)
+                        robot.IndexTimer.stop()
+                        robot.IndexTimer.reset()
+                        robot.IndexRunning = False
+                        print("Ball Indexed")
 
-        if robot.PrintTimer.hasPeriodPassed(1):
-            print(int(robot.IndexTimer.get()))
+                    if robot.PrintTimer.hasPeriodPassed(1):
+                        print(int(robot.IndexTimer.get()))
             
     def ultrasonicAim(robot, distFt):
         distGoalLow = distFt * 12.0 - 1.0
@@ -159,7 +117,26 @@ class utilities():
             #robot.drivetrainController.rearLeft.set(0)
             #robot.drivetrainController.rearRight.set(0)
             return True
+    
 
+    def ControlPanelDriving(robot):
+        #while button held, this runs- ultrasonic check and then encoder driving. use DriveNumInches? slow speed.
+        print("dunno problem")
+        if robot.AutoTimer.hasPeriodPassed(.1):
+            print("got here.")
+            value = robot.ultrasonic.getVoltage() * 4.8
+            if value >= 2:
+                robot.drivetrainController.frontLeft.set(.01)
+                robot.drivetrainController.frontRight.set(.01)
+                robot.drivetrainController.rearLeft.set(.01)
+                robot.drivetrainController.rearRight.set(.01)
+            else:
+                robot.drivetrainController.frontLeft.set(0.1)
+                robot.drivetrainController.frontRight.set(0)
+                robot.drivetrainController.rearLeft.set(0)
+                robot.drivetrainController.rearRight.set(0)
+            
+    #Auto Functions
     def robocheckFeet(robot, distance):
         value = getVoltage() * 4.8
         value /= 12

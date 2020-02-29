@@ -22,3 +22,6 @@ Deploying code to the roboRIO. Open command line go to where the file/folder is 
 
     py -3 robot.py deploy --skip-tests --no-version-check
 
+----------------------------------------------------------------------------------------------------------------------------------
+Most of our sources and docs come from Robotpy docs. 
+https://robotpy.readthedocs.io/en/stable/ 

@@ -2,7 +2,7 @@ import wpilib
 from utilities import utilities
 
 class AutoStates():
-        def portStart(robot):
+    def portStart(robot):
         if robot.autostate == 'start': #aim bot w/ ultrasonic
             done = utilities.ultrasonicAim(robot, 10)
             if done:

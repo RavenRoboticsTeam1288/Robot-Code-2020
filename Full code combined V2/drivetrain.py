@@ -16,23 +16,23 @@ class DrivetrainController():
     def __init__(self, robot):# This defines __init__(self, robot):
 
         #Drivetrain Motor Setup
-        #Setup for PWM Tank Drive
-        '''self.frontLeft = wpilib.Victor(9)
+        #Setup for Tank Drive
+        self.frontLeft = ctre.WPI_TalonSRX(9)
         #self.frontLeft.setInverted(True)
-        self.rearLeft = wpilib.Victor(5)
+        self.rearLeft = ctre.WPI_TalonSRX(5)
         self.left = wpilib.SpeedControllerGroup(self.frontLeft, self.rearLeft)
-        self.frontRight = wpilib.Victor(7)
+        self.frontRight = ctre.WPI_TalonSRX(7)
         #self.frontRight.setInverted(True)
-        self.rearRight = wpilib.Victor(8)
+        self.rearRight = ctre.WPI_TalonSRX(8)
         self.right = wpilib.SpeedControllerGroup(self.frontRight, self.rearRight)
-        robot.drive = DifferentialDrive(self.left, self.right)'''
+        robot.drive = DifferentialDrive(self.left, self.right)
         
-        #Can bus Tank Drive
-        self.frontLeft = ctre.WPI_VictorSPX(4)
+        #Can bus Mecanum Drive
+        '''self.frontLeft = ctre.WPI_VictorSPX(4)
         self.rearLeft = ctre.WPI_VictorSPX(3)
         self.frontRight = wpilib.Talon(0)
         self.rearRight = ctre.WPI_VictorSPX(2)
-        robot.drive = MecanumDrive(self.frontLeft, self.rearLeft, self.frontRight, self.rearRight)
+        robot.drive = MecanumDrive(self.frontLeft, self.rearLeft, self.frontRight, self.rearRight)'''
     
     #---------------------------------------------------------------------------------------------------
     
@@ -59,6 +59,9 @@ class DrivetrainController():
             stick1_Y *= 0.5
             stick2_Y *= 0.5
 
+        robot.gamepad.getRawButton(1):
+            utilities.ControlPanelDriving(robot)
+            
         #Tank Drive Setup
         robot.drive.tankDrive(stick1_Y, stick2_Y)
 

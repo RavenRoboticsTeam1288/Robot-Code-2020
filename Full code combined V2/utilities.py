@@ -8,7 +8,7 @@ class utilities():
     def driveNumInches(robot, direction, speed1, num):
         print("Got to DNI")
         ticksNeeded = num * (100/2.67)
-        if robot.encoderLeft.get() < ticksNeeded:
+        if robot.drivetrainController.frontLeft.getSelectedSensorPosition(0) < ticksNeeded:
             #robot.left.set(speed1)
             robot.drivetrainController.frontLeft.set(speed1)
             robot.drivetrainController.rearLeft.set(speed1)
@@ -17,7 +17,7 @@ class utilities():
             robot.drivetrainController.frontLeft.set(0)
             robot.drivetrainController.rearLeft.set(0)
             robot.drivetrainController.encoderLeft.reset()
-        if robot.encoderRight.get() < ticksNeeded:
+        if robot.drivetrainController.frontRight.getSelectedSensorPosition(0) < ticksNeeded:
             #robot.right.set(speed1)
             robot.drivetrainController.frontRight.set(speed1)
             robot.drivetrainController.rearRight.set(speed1)
@@ -26,74 +26,8 @@ class utilities():
             robot.drivetrainController.frontRight.set(0)
             robot.drivetrainController.rearRight.set(0)
             robot.drivetrainController.encoderRight.reset()
-        if robot.encoderRight.get() >= ticksNeeded and encoder.Left.get() >= ticksNeeded:
+        if robot.drivetrainController.frontLeft.getSelectedSensorPosition(0) >= ticksNeeded and robot.drivetrainController.frontRight.getSelectedSensorPosition(0) >= ticksNeeded:
             return True
-
-    def ultrasonicAim(robot, distFt):
-        distGoalLow = distFt * 12
-        distGoalLow += -2
-        distGoalHigh = distFt * 12
-        distGoalHigh += 2
-        value = getVoltage() * 4.8
-        if value > distGoalHigh:
-            #robot.left.set(.1)
-            #robot.right.set(.1)
-            robot.drivetrainController.frontLeft.set(.1)
-            robot.drivetrainController.frontRight.set(.1)
-            robot.drivetrainController.rearLeft.set(.1)
-            robot.drivetrainController.rearRight.set(.1)
-        elif value < distGoalLow:
-            #robot.right.set(-.1)
-            #robot.left.set(-.1)
-            robot.drivetrainController.frontLeft.set(-.1)
-            robot.drivetrainController.frontRight.set(-.1)
-            robot.drivetrainController.rearLeft.set(-.1)
-            robot.drivetrainController.rearRight.set(-.1)
-        else:
-            #robot.right.set(0)
-            #robot.left.set(0)
-            robot.drivetrainController.frontLeft.set(0)
-            robot.drivetrainController.frontRight.set(0)
-            robot.drivetrainController.rearLeft.set(0)
-            robot.drivetrainController.rearRight.set(0)
-            return True
-
-    def turnNumDegrees(robot, num, speed):
-        angle = robot.gyro.getAngle()
-        angle = angle % 360.0
-        if angle < 0.0:
-            angle = angle + 360.0
-        print(angle)
-
-        goalMin = num - .5
-        goalMax = num + .5
-
-
-        if angle > goalMax:
-            #robot.right.set(0)
-            #robot.left.set(direction * speed)
-            robot.drivetrainController.frontLeft.set(-1 * speed)
-            robot.drivetrainController.frontRight.set(-1 * speed)
-            robot.drivetrainController.rearLeft.set(-1 * speed)
-            robot.drivetrainController.rearRight.set(-1 * speed)
-
-        elif angle < goalMin:
-            #robot.right.set(direction * speed)
-            #robot.left.set(0)
-            robot.drivetrainController.frontLeft.set(1 * speed)
-            robot.drivetrainController.frontRight.set(1 * speed)
-            robot.drivetrainController.rearLeft.set(1 * speed)
-            robot.drivetrainController.rearRight.set(1 * speed)
-
-        else:
-            #robot.right.set(0)
-            #robot.left.set(0)
-            robot.drivetrainController.frontLeft.set(0)
-            robot.drivetrainController.frontRight.set(0)
-            robot.drivetrainController.rearLeft.set(0)
-            robot.drivetrainController.rearRight.set(0)
-            return True
-
     def BallIndex(robot):
         if Shooter.IndexSensor3:
             pass
@@ -114,18 +48,103 @@ class utilities():
 
                     if robot.PrintTimer.hasPeriodPassed(1):
                         print(int(robot.IndexTimer.get()))
-
-    #Auto Functions
-    def DriveNumSecs(robot, direction, speed1, num):
-        if robot.AutoTimer.get() < 3:
-            robot.rightFrontMotor.set(speed1)
+            
+    def ultrasonicAim(robot, distFt):
+        distGoalLow = distFt * 12.0 - 1.0
+        distGoalHigh = distFt * 12.0 + 1.0
+        value = getVoltage() * 4.8
+        if value > distGoalHigh:
+            robot.left.set(.1)
+            robot.right.set(.1)
+            #robot.drivetrainController.frontLeft.set(.1)
+            #robot.drivetrainController.frontRight.set(.1)
+            #robot.drivetrainController.rearLeft.set(.1)
+            #robot.drivetrainController.rearRight.set(.1)
+        elif value < distGoalLow:
+            robot.right.set(-.1)
+            robot.left.set(-.1)
+            #robot.drivetrainController.frontLeft.set(-.1)
+            #robot.drivetrainController.frontRight.set(-.1)
+            #robot.drivetrainController.rearLeft.set(-.1)
+            #robot.drivetrainController.rearRight.set(-.1)
         else:
-            robot.rightFrontMotor.set(0)
-            robot.AutoTimer.stop()
-            robot.AutoTimer.reset()
-            robot.State = 2
+            robot.right.set(0)
+            robot.left.set(0)
+            #robot.drivetrainController.frontLeft.set(0)
+            #robot.drivetrainController.frontRight.set(0)
+            #robot.drivetrainController.rearLeft.set(0)
+            #robot.drivetrainController.rearRight.set(0)
+            return True
 
+    def turnNumDegrees(robot, num):
+        #currentPos = robot.gyro.getAngle()
+        numMin = num - .1
+        numMax = num + .1
+        angle = robot.gyro.getAngle()
+        if angle < 0:
+            angles + 360
+        
+        if angle > 360:
+            angle - 360
+            
+        value = abs(angle - num)
+        print(angle)
 
+        if angle < numMin or angle > numMax:
+            #if value >= 180: #turn left
+            if ((value < 0 and abs(value) > 180) or (value > 0 and abs(value) < 180)): #TURN LEFT
+                robot.right.set(0)
+                robot.left.set(direction * speed)
+                #robot.drivetrainController.frontLeft.set(-1 * speed)
+                #robot.drivetrainController.frontRight.set(-1 * speed)
+                #robot.drivetrainController.rearLeft.set(-1 * speed)
+                #robot.drivetrainController.rearRight.set(-1 * speed)
+
+            #if value <= 180: #turn right
+            elif ((value <= 0 and abs(value) <= 180) or (value >= 0 and abs(value) >= 180)): #TURN RIGHT    
+                robot.right.set(direction * speed)
+                robot.left.set(0)
+                #robot.drivetrainController.frontLeft.set(1 * speed)
+                #robot.drivetrainController.frontRight.set(1 * speed)
+                #robot.drivetrainController.rearLeft.set(1 * speed)
+                #robot.drivetrainController.rearRight.set(1 * speed)
+            
+        else:
+            robot.right.set(0)
+            robot.left.set(0)
+            #robot.drivetrainController.frontLeft.set(0)
+            #robot.drivetrainController.frontRight.set(0)
+            #robot.drivetrainController.rearLeft.set(0)
+            #robot.drivetrainController.rearRight.set(0)
+            return True
+    
+
+    def ControlPanelDriving(robot):
+        #while button held, this runs- ultrasonic check and then encoder driving. use DriveNumInches? slow speed.
+        print("dunno problem")
+        if robot.AutoTimer.hasPeriodPassed(.1):
+            print("got here.")
+            value = robot.ultrasonic.getVoltage() * 4.8
+            if value >= 2:
+                robot.drivetrainController.frontLeft.set(.01)
+                robot.drivetrainController.frontRight.set(.01)
+                robot.drivetrainController.rearLeft.set(.01)
+                robot.drivetrainController.rearRight.set(.01)
+            else:
+                robot.drivetrainController.frontLeft.set(0.1)
+                robot.drivetrainController.frontRight.set(0)
+                robot.drivetrainController.rearLeft.set(0)
+                robot.drivetrainController.rearRight.set(0)
+            
+    #Auto Functions
+    def robocheckFeet(robot, distance):
+        value = getVoltage() * 4.8
+        value /= 12
+        if value > distance:
+            self.moveSafe = True
+        elif value <= distance:
+            self.moveSafe = False
+            
     #trevor's first gyro code:
     '''run gyro.com
     enter

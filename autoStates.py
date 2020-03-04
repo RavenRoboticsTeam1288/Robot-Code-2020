@@ -1,5 +1,6 @@
 import wpilib
 from utilities import utilities
+from Shooter import ShooterController
 
 class AutoStates():
     def portStart(robot):
@@ -23,13 +24,15 @@ class AutoStates():
             return True
 
     def offStart(robot):
-        if robot.autostate == 'start': #move bot to wall spot
+        print("Got to starting")
+        if robot.autostate == 'Test':
             print("Format is: [Start] [section] - [completed action]")
             done = utilities.ultrasonicAim(robot, 5)
             if done:
                 print("OffStart 1 - start")
                 robot.autostate = 'turn1'
         elif robot.autostate == 'turn1': #turn 90
+            print("die")
             done = utilities.turnNumDegrees(robot, 90)
             if done:
                 print("OffStart 2 - turn1")
@@ -46,7 +49,7 @@ class AutoStates():
                 robot.autostate = 'robocheck'
         elif robot.autostate == 'robocheck': #check for bot
             done = utilities.robocheckFeet(robot, 12)
-            if self.moveSafe: #robot not there
+            if robot.moveSafe: #robot not there
                 print("OffStart Move Safe")
                 done = utilities.turnNumDegrees(robot, 180)
                 if done:
@@ -54,7 +57,7 @@ class AutoStates():
                     done = ultrasonicAim(robot, 1)
                     if done:
                         print("OffStart Move Safe 3 - aim")
-                        done = Shooter.autoShootLow(robot)
+                        done = Shooter.autoShootLow(robot) #when it breaks on thursday put the prints in the functions themselves.
                         if done:
                             print("OffStart Move Safe 4 - shoot")
                             return True
@@ -70,7 +73,7 @@ class AutoStates():
                 print("Offstart 5 - aim")
                 robot.autostate = 'shoot'
         elif robot.autostate == 'shoot': #shoot balls
-            done = Shooter.autoShoot(robot)
+            done = ShooterController.AutoShooting(robot)
             if done:
                 print("Offstart 6 - shoot")
                 robot.autostate = 'move2'
@@ -87,4 +90,4 @@ class AutoStates():
         utilities.driveNumInches(robot, 1, .1, 1)
         print("PANIC!! but this is actually right")
         return True
-     
+

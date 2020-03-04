@@ -10,26 +10,26 @@ from colorSensor import ColorSensor
 class ClimberController():
 
     def __init__(self):
-        
+
         #Setup for the Motors using CTRE can bus
         #Uses The phonix Turner Software to Assign the Motor Ids
         self.Winch = ctre.WPI_VictorSPX(1)
         self.Scissor = ctre.TalonSRX(3)
         self.coFlyWheel = ctre.WPI_VictorSPX(2)
         self.stickLift = ctre.WPI_VictorSPX(4)
-        
+
         #Scissor lift Positional PID loop
         #Starts by getting the the encoder that is connected to the Motor controller
         self.Scissor.configSelectedFeedbackSensor(ctre.FeedbackDevice.QuadEncoder,0,0)
         self.Scissor.config_kP(0, 0.005, 0) #Configuring the different parts of the loop.
         self.Scissor.config_kI(0, 0.0000001, 0)
         self.Scissor.config_kD(0, 0.0, 0)
-        
+
         '''self.Winch = wpilib.Victor(1)
         self.Scissor = ctre.WPI_TalonSRX(3)
         self.coFlyWheel = wpilib.Victor(3)
         self.stickLift = wpilib.Victor(4)'''
-        
+
         #Misc variable setups
         self.scissorExtendSpeed = .6
         self.scissorRetractSpeed = -.6
@@ -42,7 +42,7 @@ class ClimberController():
         '''self.motor1 = ctre.WPI_VictorSPX(3)'''
         self.motor1 = wpilib.Victor(3)
 #------------------------------------------------------------------------------------------------------------------------------#
-        
+
         #Seting up the Color sensor
         #self.colorSensor = ColorSensorV3(wpilib.I2C.Port.kOnboard)
         #self.colorSensor = ColorSensor.ColorSensor()

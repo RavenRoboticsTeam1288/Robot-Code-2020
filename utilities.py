@@ -28,6 +28,8 @@ class utilities():
             robot.drivetrainController.encoderRight.reset()
         if robot.drivetrainController.frontLeft.getSelectedSensorPosition(0) >= ticksNeeded and robot.drivetrainController.frontRight.getSelectedSensorPosition(0) >= ticksNeeded:
             return True
+        elif robot.AutoTimer.get(2):
+            return True     
     def BallIndex(robot):
         if Shooter.IndexSensor3:
             pass
@@ -117,6 +119,8 @@ class utilities():
             #robot.drivetrainController.rearLeft.set(0)
             #robot.drivetrainController.rearRight.set(0)
             return True
+        elif robot.AutoTimer.get(2):
+            return True     
     
 
     def ControlPanelDriving(robot):

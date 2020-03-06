@@ -6,16 +6,9 @@ class ShooterController():
     def __init__(self, robot):
         #Motor Setup
         self.RakeMotor = ctre.WPI_TalonSRX(6)
-        self.PivotMotor = ctre.WPI_TalonSRX(5)
         self.ConveyorMotor1 = ctre.WPI_TalonSRX(4)
         self.ConveyorMotor2 = ctre.WPI_TalonSRX(3)
         self.Flywheel = ctre.WPI_TalonSRX(2)
-        self.TimedMotor = ctre.WPI_TalonSRX(1)
-        '''self.ConveyorMotor1 = wpilib.Victor(4) #not the real port
-        self.ConveyorMotor2 = wpilib.Victor(3) #not the real port
-        self.Flywheel = wpilib.Victor(2) #not the real port
-        #self.TimedMotor = wpilib.Victor(1) #not the real port
-        self.RakeMotor = wpilib.Victor(5) #not the real port'''
 
         #Timer Setup
         self.ShootTimer = wpilib.Timer()
@@ -32,12 +25,12 @@ class ShooterController():
 	#self.ConveyorMotor1.get
 
         #Misc Setup:
-        self.IndexSensor1 = wpilib.DigitalInput(5) #not the real port
-        self.IndexSensor2 = wpilib.DigitalInput(6) #not the real port
-        self.IndexSensor3 = wpilib.DigitalInput(7) #not the real port
-        self.BumpSwitch = wpilib.DigitalInput(1) #not the real port
-        self.RakeRelease1 = wpilib.PWM(0) #not the real port
-        self.RakeRelease2 = wpilib.PWM(3) #not the real port
+        self.IndexSensor1 = wpilib.DigitalInput(5)
+        self.IndexSensor2 = wpilib.DigitalInput(6)
+        self.IndexSensor3 = wpilib.DigitalInput(7)
+        #self.BumpSwitch = wpilib.DigitalInput(1)
+        self.RakeRelease1 = wpilib.PWM(0)
+        self.RakeRelease2 = wpilib.PWM(1)
         self.RakeDropping = True
         self.AutoShoot = False
         self.AutoShootLow = False

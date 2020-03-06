@@ -30,8 +30,6 @@ class utilities():
             #robot.drivetrainController.encoderRight.reset()
         if robot.drivetrainController.frontLeft.getSelectedSensorPosition(0) >= ticksNeeded and robot.drivetrainController.frontRight.getSelectedSensorPosition(0) >= ticksNeeded:
             return True
-        if robot.AutoTimer.hasPeriodPassed(2):
-            return True
         
     def BallIndex(robot):
         if Shooter.IndexSensor3:
@@ -55,6 +53,7 @@ class utilities():
                         print(int(robot.IndexTimer.get()))
             
     def ultrasonicAim(robot, distFt):
+        print("ultrasonicAim")
         distGoalLow = distFt * 12.0 - 1.0
         distGoalHigh = distFt * 12.0 + 1.0
         value = robot.ultrasonic.getVoltage() * 4.8
@@ -78,11 +77,10 @@ class utilities():
             #robot.drivetrainController.rearLeft.set(0)
             #robot.drivetrainController.rearRight.set(0)
             return True
-        if robot.AutoTimer.hasPeriodPassed(2):
-            return True     
         
 
     def turnNumDegrees(robot, num):
+        print("turnNumDegrees")
         #currentPos = robot.gyro.getAngle()
         numMin = num - .1
         numMax = num + .1
@@ -124,10 +122,6 @@ class utilities():
             #robot.drivetrainController.rearRight.set(0)
             return True
 
-        if robot.AutoTimer.hasPeriodPassed(2):
-            return True
-        
-
     def ControlPanelDriving(robot):
         #while button held, this runs- ultrasonic check and then encoder driving. use DriveNumInches? slow speed.
         print("dunno problem")
@@ -143,12 +137,13 @@ class utilities():
             
     #Auto Functions
     def robocheckFeet(robot, distance):
+        print("robocheckFeet")
         value = robot.ultrasonic.getVoltage() * 4.8
         value /= 12
         if value > distance:
-            robot.moveSafe = True
+            robot.moveSafe = "safe"
         elif value <= distance:
-            robot.moveSafe = False
+            robot.moveSafe = "not safe"
             
     #trevor's first gyro code:
     '''run gyro.com

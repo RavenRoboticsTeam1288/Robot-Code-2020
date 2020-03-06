@@ -142,6 +142,7 @@ class ShooterController():
 
 
     def AutoShooting(robot):
+        print("AutoShooting")
         robot.ShooterController.Flywheel.set(ctre.ControlMode.Velocity, 10240)
         if robot.ShooterController.ShootTimer.get() < robot.ShooterController.WaitTime:
             robot.ShooterController.ConveyorMotor1.set(.1)
@@ -165,6 +166,7 @@ class ShooterController():
             print(int(robot.ShooterController.ShootTimer.get()))
 
     def AutoShootingLow(robot):
+        print("AutoShootingLow")
         robot.ShooterController.Flywheel.set(ctre.ControlMode.Velocity, 5240)
         if robot.ShooterController.ShootTimer.get() < robot.ShooterController.WaitTime:
             robot.ShooterController.ConveyorMotor1.set(.1)

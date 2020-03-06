@@ -46,7 +46,7 @@ class MyRobot(wpilib.TimedRobot):
         self.Servo = wpilib.PWM(4)
         self.ultrasonic = wpilib.AnalogInput(2)
 
-        self.autostate = 'start'
+        self.autostate = 'Test'
         self.autoComplete = False
 
         #PID Loop Setup for the flywheel
@@ -69,13 +69,10 @@ class MyRobot(wpilib.TimedRobot):
             #chill until teleop
         else:
             #autostate function calling hell
-            if self.sd.getString("Start Position", "") == "offStart":
-                self.autoComplete = AutoStates.offStart(self)
-                print("OffStart")
-            elif self.sd.getString("Start Position", "") == "portStart":
+            if self.sd.getString("Start Position", "") == "1":
                 self.autoComplete = AutoStates.portStart(self)
                 print("portStart")
-            elif self.sd.getString("Start Position", "") == "lastResortStart":
+            elif self.sd.getString("Start Position", "") == "2":
                 self.autoComplete = AutoStates.lastResortStart(self)
                 print("lastResortStart")
         #self.ShooterController.autonomousPeriodic(self)
@@ -85,7 +82,7 @@ class MyRobot(wpilib.TimedRobot):
         self.autostate = 'Test'
         self.autoComplete = False
         self.ShooterController.autonomousInit(self)
-        moveSafe = False
+        moveSafe = "empty"
         #self.drivetrainController.autonomousInit(self)
 
     def disabledInit(self):

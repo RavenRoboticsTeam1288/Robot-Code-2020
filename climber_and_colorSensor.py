@@ -13,10 +13,12 @@ class ClimberController():
 
         #Setup for the Motors using CTRE can bus
         #Uses The phonix Turner Software to Assign the Motor Ids
-        self.Winch = ctre.WPI_VictorSPX(1)
-        self.Scissor = ctre.TalonSRX(3)
-        self.coFlyWheel = ctre.WPI_VictorSPX(2)
-        self.stickLift = ctre.WPI_VictorSPX(4)
+        self.Winch1 = ctre.WPI_TalonSRX(13)
+        self.Winch2 = ctre.WPI_TalonSRX(14)
+        self.Winch = wpilib.SpeedControllerGroup(self.Winch1, self.Winch2)
+        self.Scissor = ctre.WPI_TalonSRX(12)
+        self.coFlyWheel = ctre.WPI_TalonSRX(10)
+        self.stickLift = ctre.WPI_TalonSRX(11)
 
         #Scissor lift Positional PID loop
         #Starts by getting the the encoder that is connected to the Motor controller
@@ -25,12 +27,8 @@ class ClimberController():
         self.Scissor.config_kI(0, 0.0000001, 0)
         self.Scissor.config_kD(0, 0.0, 0)
 
-        '''self.Winch = wpilib.Victor(1)
-        self.Scissor = ctre.WPI_TalonSRX(3)
-        self.coFlyWheel = wpilib.Victor(3)
-        self.stickLift = wpilib.Victor(4)'''
-
         #Misc variable setups
+        self.PIDRunning = false
         self.scissorExtendSpeed = .6
         self.scissorRetractSpeed = -.6
         self.winchRetractSpeed = -.1
@@ -53,12 +51,23 @@ class ClimberController():
             print("work")
             #self.Scissor.set(self.scissorExtendSpeed)
             self.Scissor.set(ctre.ControlMode.Position, 2517000)
+            self.PIDRunning = True
         elif robot.gamepad.getRawButton(6) and self.Scissor.getSelectedSensorPosition(0) > 0:
             #self.Scissor.set(self.scissorRetractSpeed)
             self.Scissor.set(ctre.ControlMode.Position, 0.0)
+            self.PIDRunning = True
         else:
             self.Scissor.set(ctre.ControlMode.Position, self.Scissor.getSelectedSensorPosition())
             print(self.Scissor.getSelectedSensorPosition(0))
+            self.PIDRunning = False
+            
+        if robot.gamepad.getRawButton(3) and not self.PIDRunning:
+            self.Scissor.set(.6)
+        elif robot.gamepad.getRawButton(3) and not self.PIDRunning:
+            self.Scissor.set(-.6)
+        elif not self.PIDRunning:
+            self.Scissor.set(0)
+        
         if robot.stick1.getRawButton(3):
             self.Winch.set(self.winchRetractSpeed)
         else:

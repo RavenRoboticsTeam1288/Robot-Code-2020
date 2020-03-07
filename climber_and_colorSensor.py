@@ -33,6 +33,7 @@ class ClimberController():
         self.scissorRetractSpeed = -.6
         self.winchRetractSpeed = -.1
         self.CoSpeed = .1
+        self.LowerLimit = wpilib.DigitalInput(4)
         rotations = 0
 
         self.timer = wpilib.Timer()
@@ -47,6 +48,9 @@ class ClimberController():
         ColorSensor.setSensor(self, ColorSensorV3(wpilib.I2C.Port.kOnboard))
 
     def teleopPeriodic(self, robot):
+        if self.LowerLimit:
+            self.Scissor.set(0)
+            print("Limit Triggered")
         if robot.gamepad.getRawButton(5) and self.Scissor.getSelectedSensorPosition(0) < 2717000:
             print("work")
             #self.Scissor.set(self.scissorExtendSpeed)

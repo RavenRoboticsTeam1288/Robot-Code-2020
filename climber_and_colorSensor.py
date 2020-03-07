@@ -13,12 +13,12 @@ class ClimberController():
 
         #Setup for the Motors using CTRE can bus
         #Uses The phonix Turner Software to Assign the Motor Ids
-        self.Winch1 = ctre.WPI_TalonSRX(13)
-        self.Winch2 = ctre.WPI_TalonSRX(14)
+        self.Winch1 = ctre.WPI_TalonSRX(11)
+        self.Winch2 = ctre.WPI_TalonSRX(3)
         self.Winch = wpilib.SpeedControllerGroup(self.Winch1, self.Winch2)
-        self.Scissor = ctre.WPI_TalonSRX(12)
-        self.coFlyWheel = ctre.WPI_TalonSRX(10)
-        self.stickLift = ctre.WPI_TalonSRX(11)
+        self.Scissor = ctre.WPI_TalonSRX(9)
+        #self.coFlyWheel = ctre.WPI_TalonSRX(5)
+        self.stickLift = ctre.WPI_TalonSRX(5)
 
         #Scissor lift Positional PID loop
         #Starts by getting the the encoder that is connected to the Motor controller
@@ -28,7 +28,7 @@ class ClimberController():
         self.Scissor.config_kD(0, 0.0, 0)
 
         #Misc variable setups
-        self.PIDRunning = false
+        self.PIDRunning = False
         self.scissorExtendSpeed = .6
         self.scissorRetractSpeed = -.6
         self.winchRetractSpeed = -.1
@@ -48,7 +48,7 @@ class ClimberController():
         ColorSensor.setSensor(self, ColorSensorV3(wpilib.I2C.Port.kOnboard))
 
     def teleopPeriodic(self, robot):
-        if self.LowerLimit:
+        if self.LowerLimit == False:
             self.Scissor.set(0)
             print("Limit Triggered")
         if robot.gamepad.getRawButton(5) and self.Scissor.getSelectedSensorPosition(0) < 2717000:
@@ -62,27 +62,27 @@ class ClimberController():
             self.PIDRunning = True
         else:
             self.Scissor.set(ctre.ControlMode.Position, self.Scissor.getSelectedSensorPosition())
-            print(self.Scissor.getSelectedSensorPosition(0))
+            #print(self.Scissor.getSelectedSensorPosition(0))
             self.PIDRunning = False
-            
-        if robot.gamepad.getRawButton(3) and not self.PIDRunning:
-            self.Scissor.set(.6)
-        elif robot.gamepad.getRawButton(3) and not self.PIDRunning:
-            self.Scissor.set(-.6)
-        elif not self.PIDRunning:
+
+        if robot.gamepad.getRawButton(3):
+            self.Scissor.set(.3)
+        elif robot.gamepad.getRawButton(4):
+            self.Scissor.set(-.3)
+        else:
             self.Scissor.set(0)
-        
+
         if robot.stick1.getRawButton(3):
-            self.Winch.set(self.winchRetractSpeed)
+            self.Winch1.set(self.winchRetractSpeed)
+            self.Winch2.set(self.winchRetractSpeed)
         else:
-            self.Winch.set(0)
-        if robot.stick1.getRawButton(2):
-            self.stickLift.set(self.CoSpeed)
-        else:
-            self.stickLift.set(0)
+            self.Winch1.set(0)
+            self.Winch2.set(0)
+
+        wpilib.SmartDashboard.putBoolean("Scissor limit", self.LowerLimit.get())
 
 #Color sensor V3
-        print(ColorSensor.getColor(self)) #Prints out the color in the terminal
+        #print(ColorSensor.getColor(self)) #Prints out the color in the terminal
         colorStr = ColorSensor.getColor(self) #Assigns the color it finds to a variable to grab later on
         #proximity = ColorSensor.sensor.getProximity() #Uses the small proximity sensor built into it
 

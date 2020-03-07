@@ -99,7 +99,6 @@ class MyRobot(wpilib.TimedRobot):
         #Drivetrain Controller
         self.drivetrainController.teleopPeriodic(self)
         self.climberController.teleopPeriodic(self)
-        self.drivetrainController.frontRight.set(.5)
 
         #Drivetrain
         #self.DrivetrainController.teleopPeriodic(self)
@@ -119,7 +118,7 @@ class MyRobot(wpilib.TimedRobot):
         #print(self.gyro.getAngle())
         self.sd.putNumber("angle", self.gyro.getAngle())
         if self.sd.containsKey('TEST'):
-            print("works")
+            #print("works")
             print(self.sd.getValue('test'))
 
 if __name__ == '__main__':
